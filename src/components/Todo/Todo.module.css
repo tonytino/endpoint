@@ -1,9 +1,19 @@
 .Todo {
+  align-items: center;
   background-color: rgba(196, 196, 196, 0.2);
   border-radius: 4px;
+  display: flex;
   font-size: 18px;
+  justify-content: space-between;
   padding: 8px;
   width: 340px;
+}
+
+.TodoLeftContents {
+  align-items: center;
+  display: flex;
+  gap: 8px;
+  justify-content: space-between;
 }
 
 .TodoToggle {

@@ -1,5 +1,6 @@
 import clsx from 'clsx';
 import { type Todo } from '../../types/Todo';
+import { dateFormatter } from '../../utils/dateFormatter';
 import { CheckedBox } from '../CheckedBox';
 import { UncheckedBox } from '../UncheckedBox';
 import classes from './Todo.module.css';
@@ -27,13 +28,15 @@ export function Todo(props: TodoProps) {
         [classes.overdue]: isOverdue,
       })}
     >
-      <button className={classes.TodoToggle}>
-        {isComplete ? <CheckedBox /> : <UncheckedBox />}
-      </button>
+      <div className={classes.TodoLeftContents}>
+        <button className={classes.TodoToggle}>
+          {isComplete ? <CheckedBox /> : <UncheckedBox />}
+        </button>
 
-      <span className={classes.description}>{description}</span>
+        <span className={classes.description}>{description}</span>
+      </div>
 
-      {dueDate}
+      {dueDate && <span>{dateFormatter.format(parsedDueDate)}</span>}
     </li>
   );
 }
