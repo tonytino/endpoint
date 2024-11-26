@@ -1,13 +1,14 @@
 import { useEffect, useState } from 'react';
+import { Todo } from './components/Todo';
 import { fetchTodos } from './lib/api';
-import { type Todo } from './types/Todo';
+import { type Todo as TodoType } from './types/Todo';
 import { sortTodos } from './utils/sortTodos';
 import classes from './App.module.css';
 
 function App() {
-  const [completedTodos, setCompletedTodos] = useState<Todo[]>([]);
+  const [completedTodos, setCompletedTodos] = useState<TodoType[]>([]);
   const [isLoading, setIsLoading] = useState(true);
-  const [pendingTodos, setPendingTodos] = useState<Todo[]>([]);
+  const [pendingTodos, setPendingTodos] = useState<TodoType[]>([]);
 
   // Fetch the initial state of the todos
   useEffect(() => {
@@ -20,8 +21,8 @@ function App() {
         const sortedTodos = sortTodos(todosJson);
 
         const groupedTodos = sortedTodos.reduce<{
-          completed: Todo[];
-          pending: Todo[];
+          completed: TodoType[];
+          pending: TodoType[];
         }>(
           (groupedTodos, currentTodo) => {
             if (currentTodo.isComplete) {
@@ -63,6 +64,26 @@ function App() {
       <div className={classes.LoadingContainer}>
         {isLoading && 'Loading...'}
       </div>
+
+      <ul className={classes.Todos}>
+        {pendingTodos.map((todo) => {
+          return (
+            <Todo
+              key={todo.id}
+              todo={todo}
+            />
+          );
+        })}
+
+        {completedTodos.map((todo) => {
+          return (
+            <Todo
+              key={todo.id}
+              todo={todo}
+            />
+          );
+        })}
+      </ul>
     </div>
   );
 }
