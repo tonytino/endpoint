@@ -19,6 +19,21 @@ export async function fetchTodos() {
 }
 
 /**
+ * Patches a Todo
+ */
+export async function patchTodo(
+  id: string,
+  payload: Partial<Omit<Todo, 'id'>>
+) {
+  const { status } = await fetcher(`PATCH/${id}`, {
+    method: 'PATCH',
+    body: JSON.stringify(payload),
+  });
+
+  return status === 'success';
+}
+
+/**
  * Wrapper for fetch that handles errors and unsuccessful requests while also providing the required headers for all requests
  */
 async function fetcher(endpoint: string, options: RequestInit) {

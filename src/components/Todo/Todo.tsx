@@ -6,11 +6,15 @@ import { UncheckedBox } from '../UncheckedBox';
 import classes from './Todo.module.css';
 
 type TodoProps = {
+  /**
+   * Function to invoke when a Todo's completion status is toggled
+   */
+  onToggleComplete: (todo: Todo) => void;
   todo: Todo;
 };
 
 export function Todo(props: TodoProps) {
-  const { todo } = props;
+  const { onToggleComplete, todo } = props;
   const { description, dueDate, isComplete } = todo;
 
   const currentTime = new Date();
@@ -29,7 +33,10 @@ export function Todo(props: TodoProps) {
       })}
     >
       <div className={classes.TodoLeftContents}>
-        <button className={classes.TodoToggle}>
+        <button
+          className={classes.TodoToggle}
+          onClick={() => onToggleComplete(todo)}
+        >
           {isComplete ? <CheckedBox /> : <UncheckedBox />}
         </button>
 

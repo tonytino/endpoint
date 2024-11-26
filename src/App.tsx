@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react';
+import { useThrottledCallback } from 'use-debounce';
 import { Todo } from './components/Todo';
-import { fetchTodos } from './lib/api';
+import { fetchTodos, patchTodo } from './lib/api';
 import { type Todo as TodoType } from './types/Todo';
 import { sortTodos } from './utils/sortTodos';
 import classes from './App.module.css';
@@ -52,10 +53,46 @@ function App() {
     };
   }, []);
 
-  console.log({
-    completedTodos,
-    pendingTodos,
-  });
+  const toggleTodo = useThrottledCallback(
+    async (toggledTodo: TodoType) => {
+      setIsLoading(true);
+
+      const isTodoNowCompleted = !toggledTodo.isComplete;
+      const isPatchedSuccessfully = await patchTodo(toggledTodo.id, {
+        isComplete: isTodoNowCompleted,
+      });
+
+      if (isPatchedSuccessfully) {
+        setCompletedTodos((todos) => {
+          if (isTodoNowCompleted) {
+            return [
+              ...todos,
+              { ...toggledTodo, isComplete: isTodoNowCompleted },
+            ];
+          } else {
+            return todos.filter(({ id }) => id !== toggledTodo.id);
+          }
+        });
+
+        setPendingTodos((todos) => {
+          if (isTodoNowCompleted) {
+            return todos.filter(({ id }) => id !== toggledTodo.id);
+          } else {
+            // Need to sort the pending todos as well if adding to such given
+            // this list is time-sensitive
+            return sortTodos([
+              ...todos,
+              { ...toggledTodo, isComplete: isTodoNowCompleted },
+            ]);
+          }
+        });
+      }
+
+      setIsLoading(false);
+    },
+    1000,
+    { trailing: false }
+  );
 
   return (
     <div>
@@ -70,6 +107,7 @@ function App() {
           return (
             <Todo
               key={todo.id}
+              onToggleComplete={toggleTodo}
               todo={todo}
             />
           );
@@ -79,6 +117,7 @@ function App() {
           return (
             <Todo
               key={todo.id}
+              onToggleComplete={toggleTodo}
               todo={todo}
             />
           );
