@@ -1,7 +1,10 @@
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import { fetchTodos } from './lib/api';
+import classes from './App.module.css';
 
 function App() {
+  const [isLoading, setIsLoading] = useState(true);
+
   // Fetch the initial state of the todos
   useEffect(() => {
     let isInitializing = true;
@@ -11,6 +14,8 @@ function App() {
 
       if (todosJson && isInitializing) {
         console.log(todosJson);
+
+        setIsLoading(false);
       }
     }
 
@@ -21,7 +26,15 @@ function App() {
     };
   }, []);
 
-  return <></>;
+  return (
+    <div>
+      <h1>Todo App</h1>
+
+      <div className={classes.LoadingContainer}>
+        {isLoading && 'Loading...'}
+      </div>
+    </div>
+  );
 }
 
 export default App;
