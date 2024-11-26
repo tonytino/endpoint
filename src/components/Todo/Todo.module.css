@@ -5,3 +5,11 @@
   padding: 8px;
   width: 340px;
 }
+
+.TodoToggle {
+  background-color: transparent;
+  border-radius: 50%;
+  height: 24px;
+  padding: 2px;
+  width: 24px;
+}

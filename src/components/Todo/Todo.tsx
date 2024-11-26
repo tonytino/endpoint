@@ -1,4 +1,6 @@
 import { type Todo } from '../../types/Todo';
+import { CheckedBox } from '../CheckedBox';
+import { UncheckedBox } from '../UncheckedBox';
 import classes from './Todo.module.css';
 
 type TodoProps = {
@@ -11,7 +13,9 @@ export function Todo(props: TodoProps) {
 
   return (
     <li className={classes.Todo}>
-      {isComplete}
+      <button className={classes.TodoToggle}>
+        {isComplete ? <CheckedBox /> : <UncheckedBox />}
+      </button>
 
       {description}
 
