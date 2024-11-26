@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react';
 import { fetchTodos } from './lib/api';
 import { type Todo } from './types/Todo';
+import { sortTodos } from './utils/sortTodos';
 import classes from './App.module.css';
 
 function App() {
@@ -16,7 +17,9 @@ function App() {
       const todosJson = await fetchTodos();
 
       if (todosJson && isInitializing) {
-        const groupedTodos = todosJson.reduce<{
+        const sortedTodos = sortTodos(todosJson);
+
+        const groupedTodos = sortedTodos.reduce<{
           completed: Todo[];
           pending: Todo[];
         }>(
